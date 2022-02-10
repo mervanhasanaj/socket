@@ -26,6 +26,6 @@ with socket.socket(socket.AF_INET,socket.SOCK_STREAM) as s:
         s.sendall(messaggio.encode("UTF-8"))# invia il vettore di byte
 
         data=s.recv(1024)# aspettiamo che il server ci rimandi in dietro i dati 
-        print("Risultato: ",data.decode)# trasforma il vettore di byte in stringa
+        print("Risultato: ",data.decode())# trasforma il vettore di byte in stringa
         
 

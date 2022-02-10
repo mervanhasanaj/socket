@@ -33,7 +33,7 @@ def ricevi_comandi(sock_service, addr_client):
         else:
             ris="Operazione non riconosciuta"
         ris=str(ris)#casting 
-        sock_service.sendall(ris.encode("UTF-()")) 
+        sock_service.sendall(ris.encode("UTF-8")) #manda vettore al client
 
     sock_service.close()
 

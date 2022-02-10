@@ -20,7 +20,7 @@ def invia_comandi(sock_service):
         sock_service.sendall(messaggio.encode("UTF-8"))# invia il vettore di byte
 
         data=sock_service.recv(1024)# aspettiamo che il server ci rimandi in dietro i dati 
-        print("Risultato: ",data.decode)# trasforma il vettore di byte in stringa
+        print("Risultato: ",data.decode())# trasforma il vettore di byte in stringa
 
 def  connessione_server(address, port):
     sock_service=socket.socket()
