@@ -1,16 +1,10 @@
-from base64 import decode
-import socket
 import json
+import socket
 
-HOST="127.0.0.1"
-PORT=65432
+SERVER_ADDRESS='127.0.0.1' # indirizzo server
+SERVER_PORT=22224  # porta del server 
 
-with socket.socket(socket.AF_INET,socket.SOCK_STREAM) as s:
-    #af inet indica il tipo di protocollo che viene usato
-    #socket stream indica che tipo di socket è
-    #whith as tiene aperto i socket dandogli come nome s,
-    #dopo che il codice è finito chiuderà la connessione con il server
-    s.connect((HOST,PORT))
+def invia_comandi(sock_service):
     while True:
         primoNumero=input("inserisci il primo numero numero. exit() per uscire")
         if primoNumero=="exit()":
@@ -23,9 +17,16 @@ with socket.socket(socket.AF_INET,socket.SOCK_STREAM) as s:
         'secondoNumero':secondoNumero}
 
         messaggio=json.dumps(messaggio)# trasformiamo l'oggetto in una stringa
-        s.sendall(messaggio.encode("UTF-8"))# invia il vettore di byte
+        sock_service.sendall(messaggio.encode("UTF-8"))# invia il vettore di byte
 
-        data=s.recv(1024)# aspettiamo che il server ci rimandi in dietro i dati 
+        data=sock_service.recv(1024)# aspettiamo che il server ci rimandi in dietro i dati 
         print("Risultato: ",data.decode)# trasforma il vettore di byte in stringa
-        
 
+def  connessione_server(address, port):
+    sock_service=socket.socket()
+    sock_service.connect((SERVER_ADDRESS, SERVER_PORT))
+    print("Connesso a " + str((SERVER_ADDRESS, SERVER_PORT)))
+    invia_comandi(sock_service)
+
+if __name__=='__main__':
+    connessione_server(SERVER_ADDRESS, SERVER_PORT)
