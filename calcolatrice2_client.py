@@ -24,8 +24,8 @@ def invia_comandi(sock_service):
 
 def  connessione_server(address, port):
     sock_service=socket.socket()
-    sock_service.connect((SERVER_ADDRESS, SERVER_PORT))
-    print("Connesso a " + str((SERVER_ADDRESS, SERVER_PORT)))
+    sock_service.connect((address, port))
+    print("Connesso a " + str((address, port)))
     invia_comandi(sock_service)
 
 if __name__=='__main__':
