@@ -60,8 +60,7 @@ def genera_richieste(num,address,port):
     if not data:
         print(f"{threading.current_thread().name}: Server non risponde. Exit")
     else:
-        print(f"{threading.current_thread().name}: Risultato: {data.decode()}") # trasforma il vettore di byte in stringa
-    s.close()
+        s.close()
     end_time_thread=time.time()
     print(f"{threading.current_thread().name} tempo di esecuzione time=", end_time_thread-start_time_thread)
 
