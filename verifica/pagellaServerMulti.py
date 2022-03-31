@@ -3,6 +3,7 @@
 import socket
 from threading import Thread
 import json
+import pprint
 
 
 SERVER_ADDRESS = '127.0.0.1'
@@ -64,18 +65,66 @@ def ricevi_comandi1(sock_service,addr_client):
 
 #Versione 2 
 def ricevi_comandi2(sock_service,addr_client):
-    pass
-    
-  #....
-  #1.recuperare dal json studente e pagella
-  #2. restituire studente, media dei voti e somma delle assenze :
+    print ("avviato")
+    while True:
+        data=sock_service.recv(1024)
+        if not data:
+            break
+        data=data.decode()
+        data=json. loads (data)
+        # completare:
+        # #1. recuperare studente e pagella
+        studente=data['studente']
+        pagella=data['pagella']
+        #2. restituire studente, media dei voti e somma delle assenze :
+        assenze=0
+        media=0
+        for i,p in enumerate (pagella) :
+            media+=int(p[1])
+            assenze+=int(p[2])
+        media=media/i
+        messaggio={'studente': studente,
+        'media':media,
+        'assenze' :assenze}
+        print ("Dati inviati al client:")
+        print (messaggio)
+        messaggio=json.dumps(messaggio)
+        sock_service.sendall(messaggio.encode("UTF-8"))
+        sock_service.close()
 
 #Versione 3
 def ricevi_comandi3(sock_service,addr_client):
-    pass
-  #....
-  #1.recuperare dal json il tabellone
-  #2. restituire per ogni studente la media dei voti e somma delle assenze :
+    print("avviato")
+    while True:
+        data=sock_service.recv(1024)
+        if not data:
+            break
+        data=data.decode()
+        data=json. loads (data)
+        # completare:
+        #1. recuperare il tabellone
+        pp=pprint.PrettyPrinter(indent=4)
+        #2. restituire una lista di dizionari: studente, media dei voti e somma delle assenze
+        tabellone=[]
+        for stud in data:
+            pagella=data[stud]
+            assenze=0
+            media=0
+            for i,p in enumerate (pagella) :
+                media+=int(p[1])
+                assenze+=int(p[2])
+            media=media/i
+            messaggio={'studente':stud,
+            'media':media,
+            'assenze':assenze}
+            tabellone.append(messaggio)
+        print ("Dati inviati al client:")
+        pp.pprint(tabellone)
+        messaggio=tabellone
+        messaggio=json.dumps(messaggio)
+        sock_service.sendall (messaggio. encode("UTF-8") )
+    sock_service.close()
+
 
 
 def ricevi_connessioni(sock_listen):

@@ -91,9 +91,13 @@ def genera_richieste1(num,address,port):
 
 #Versione 2 
 def genera_richieste2(num,address,port):
-    studenti=("Hasanaj", "Peralta", "Gornati", "Fare", "Giamboi")
-    
-    pass
+    try:
+        s=socket.socket()
+        s.connect((address,port))
+        print(f"\n{threading.current_thread().name} {num+1}) Connessione al server: {address}:{port}")
+    except:
+        print(f"{threading.current_thread().name} Qualcosa è andato storto, sto uscendo... \n")
+        sys.exit()
 
   #....
   #   1. Generazione casuale di uno studente(valori ammessi: 5 cognomi a caso scelti da una lista)
@@ -101,21 +105,82 @@ def genera_richieste2(num,address,port):
   #   generazione di un voto (valori ammessi 1 ..10)
   #   e delle assenze (valori ammessi 1..5) 
   #   esempio: pagella={"Cognome1":[("Matematica",8,1), ("Italiano",6,1), ("Inglese",9.5,3), ("Storia",8,2), ("Geografia",8,1)]}
-  #2. comporre il messaggio, inviarlo come json
-  #3  ricevere il risultato come json {'studente': 'Cognome1', 'media': 8.0, 'assenze': 8}
+
+    studenti=['Studente0', 'Studentel', 'Studente2', 'Studente3', 'Studente4']
+    materie=[ 'Matematica', 'Italiano', 'inglese', 'Storia e Geografia']
+    studente=studenti[random.randint(0,4)]
+    pagella=()
+    for m in materie:
+        voto=random.randint(1,10)
+        assenze=random.randint(1,5)
+        pagella.append((m, voto, assenze))
+
+#2. comporre il messaggio, inviarlo come json
+    messaggio={'studente': studente,
+    'pagella':pagella}
+    print (f"Dati inviati al server {messaggio}")
+    messaggio=json.dumps(messaggio)
+    s.sendall(messaggio.encode("UTF-8"))
+    data=s.recv(1024)
+    data=data.decode()
+    data=json.loads(data)
+    print (f"Dati ricevuti dal server (data)")
+
+    if not data:
+        print(f"{threading.current_thread().name}:Servernonrisponde.Exit")
+    else:
+        print(f"{threading.current_thread().name}:Lo studente {data['studente']} ha una media di: {data['media']:.2f} e un totale di assenze: {data['assenze']}")
+    s.close()
+
+#3  ricevere il risultato come json {'studente': 'Cognome1', 'media': 8.0, 'assenze': 8}
 
 #Versione 3
 def genera_richieste3(num,address,port):
-    pass
-  #....
-  #   1. Per ognuno degli studenti ammessi: 5 cognomi a caso scelti da una lista
-  #   Per ognuna delle materie ammesse: Matematica, Italiano, inglese, Storia e Geografia)
-  #   generazione di un voto (valori ammessi 1 ..10)
-  #   e delle assenze (valori ammessi 1..5) 
-  #   esempio: tabellone={"Cognome1":[("Matematica",8,1), ("Italiano",6,1), ("Inglese",9,3), ("Storia",8,2), ("Geografia",8,1)],
-  #                       "Cognome2":[("Matematica",7,2), ("Italiano",5,3), ("Inglese",4,12), ("Storia",5,2), ("Geografia",4,1)],
-  #                        .....}
-  #2. comporre il messaggio, inviarlo come json
+    try:
+        s=socket.socket()
+        s.connect ((address, port))
+        print(f"\n{threading.currentthread().name}{num+1})Connessionealserver:{address}:{port}")
+    except:
+        print(f"{threading.current_thread().name} Qualcosaèandatostorto,stouscendo...(n")
+    sys.exit()
+
+#...
+#   #   1. Per ognuno degli studenti ammessi: 5 cognomi a caso scelti da una lista
+#   Per ognuna delle materie ammesse: Matematica, Italiano, inglese, Storia e Geografia)
+#   generazione di un voto (valori ammessi 1 ..10)
+#   e delle assenze (valori ammessi 1..5) 
+#   esempio: tabellone={"Cognome1":[("Matematica",8,1), ("Italiano",6,1), ("Inglese",9,3), ("Storia",8,2), ("Geografia",8,1)],
+#                       "Cognome2":[("Matematica",7,2), ("Italiano",5,3), ("Inglese",4,12), ("Storia",5,2), ("Geografia",4,1)],
+#                        .....}
+#2. comporre il messaggio, inviarlo come json
+    studenti=[ 'Studente0', 'Studente1', 'Studente2', 'Studente3', 'Studente4']
+    materie=[ 'Matematica', 'Italiano', 'inglese', 'Storia e Geografia']
+    tabellone={}
+    for stud in studenti:
+        pagella=[]
+        for m in materie:
+            voto=random.randint(1,10)
+            assenze=random.randint(1,5)
+            pagella.append ( (m, voto, assenze))
+        tabellone [stud]=pagella
+    
+    print ("Dati inviati al server")
+    pp=pprint.PrettyPrinter(indent=4)
+    pp-pprint(tabellone)
+    tabellone=json.dumps(tabellone)
+    s.sendall(tabellone.encode("UTF-g"))
+    data=s.recv(1024)
+    data=data.decode()
+    data=json. loads (data)
+    print ("Dati ricevuti dal server")
+    pp.pprint(data)
+
+    if not data:
+        print(f"{threading.current_thread().name}:Server non risponde. Exit")
+    else:
+        for elemento in data:
+            print(f"{threading. current_thread().name}: Lo studente {elemento['studente']} ha una media di: {elemento['media']:.2f} e un totale di assenze: {elemento['assenze']}")
+    s.close()
   #3  ricevere il risultato come json e stampare l'output come indicato in CONSOLE CLIENT V.3
 
 if __name__ == '__main__':
